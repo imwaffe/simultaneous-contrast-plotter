@@ -15,7 +15,7 @@ PARAMETERS_LIST = {
     "rgb_dist": "RGB euclidean distance",
     "hue_dist": "Hue distance",
     "saturation_dist": "Saturation distance",
-    "luma_dist": "Luminance distance"
+    "luma_dist": "Lightness distance"
 }
 CHARTIDS = ["b_wn", "bm", "by", "c_wn", "cg", "cr", "g_wn", "gc", "gm", "m_wn", "mb", "mg", "r_wn", "rc", "ry",
             "y_wn", "yb", "yr"]
