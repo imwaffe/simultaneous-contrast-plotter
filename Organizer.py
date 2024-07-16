@@ -32,7 +32,7 @@ while organize_by < 0 or organize_by > len(ORGANIZE_BY):
 # Iterate through CSV files
 for csv_path in csv_files:
     actual_csv_rows = {}
-    user_details_file = os.path.dirname(csv_path) + "\\user_details.txt"
+    user_details_file = os.path.dirname(csv_path) + "/user_details.txt"
     is_colorblind = ""
     user_id = ""
     found_strings = 0

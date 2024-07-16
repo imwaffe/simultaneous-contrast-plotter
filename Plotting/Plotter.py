@@ -83,7 +83,7 @@ def plot_style_1_PAPER(data_1, label_1, x_labels, fig, data_2=None, hlines=None,
                        color_1="#2C7BB6", color_2="#EBBA34", color_3="#000000"):
     gs = GridSpec(2, 1, figure=fig)
 
-    fig.suptitle(sup_title, fontweight="bold", fontsize=18)
+    fig.suptitle(sup_title, fontweight="bold", fontsize=24)
 
     ax1 = plotter.grouped_boxplot(
         ax=plt.subplot(gs[0, 0]),
@@ -117,7 +117,7 @@ def plot_style_1_PAPER(data_1, label_1, x_labels, fig, data_2=None, hlines=None,
     for groups in range(int(len(hlines))):
         x.append(groups * group_each)
     x = np.array(x)
-    ax2.hlines(hlines, x - 0.5, x + 2, linestyles="dashdot", colors=["#000000"])
+    ax2.hlines(hlines, x - 0.5, x + 1, linestyles="dashdot", colors=["#000000"])
 
     patches = [mpatches.Patch(color=c) for c in [color_1, color_2]]
     patches.append(Line2D([0], [0], color=color_3, linewidth=3, linestyle='--'))

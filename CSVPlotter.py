@@ -3,8 +3,8 @@ import os
 from pprint import pprint
 
 import numpy as np
-from colour import models
-from colour import plotting as xy
+# from colour import models
+# from colour import plotting as xy
 
 import gc
 import matplotlib.pyplot as plt
@@ -45,14 +45,16 @@ START_TO_PICKED = {
 }
 # CHARTIDS = ["b_wn", "bm", "by", "c_wn", "cg", "cr", "g_wn", "gc", "gm", "m_wn", "mb", "mg", "r_wn", "ry", "rc",
 #            "y_wn", "yr", "yb"]
-# CHARTIDS_BY_BG = ["by", "yb", "gm", "mg", "ry", "yr", "bm", "mb", "rc", "cr", "gc", "cg"]
 
-CHARTIDS = ["mg-m", "gm-wn_m", "gm-g_wn", "mg-wn_g"]
+CHARTIDS = ["bm", "by", "cg", "cr", "gc", "gm", "mb", "mg", "ry", "rc", "yr", "yb"]
+CHARTIDS_BY_BG = ["by", "yb", "gm", "mg", "ry", "yr", "bm", "mb", "rc", "cr", "gc", "cg"]
+
+# CHARTIDS = ["mg-m", "gm-wn_m", "gm-g_wn", "mg-wn_g"]
 
 # CHARTIDS = ["gm-g_wn", "mg-wn_g", "gm_big", "mg-m_wn", "mg_small", "gm_small", "gm-wn_m", "mg_big"]
 # CHARTIDS_BY_BG = ["gm-g_wn", "mg-wn_g", "mg-m_wn", "gm-wn_m", "gm_big", "mg_big", "mg_small", "gm_small"]
 
-GROUP_EACH_STD = 3
+GROUP_EACH_STD = 2
 GROUP_EACH_PAIRS = 1
 
 LABEL_1 = "colorblinds"
@@ -148,7 +150,7 @@ def by_user_stats(parameter, chart_ids, csvs):
         plt.tight_layout()
         # plt.pause(0.3)
         # plt.show(block=False)
-        filename = os.path.join(path, f"chart " + (",").join(CHARTIDS[i * 3:(i + 1) * 3]) + ".png")
+        filename = os.path.join(path, f"chart " + (",").join(CHARTIDS[i * 3:(i + 1) * 3]) + ".pdf")
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         print(f"\t\tSaving plots to {filename}...")
         plt.savefig(filename)
@@ -190,7 +192,7 @@ def by_user_stats(parameter, chart_ids, csvs):
 #             columns=2
 #         )
 #         plt.tight_layout()
-#         filename = os.path.join(path, f"charts " + (",").join(CHARTIDS[i * 3:(i + 1) * 3]) + ".png")
+#         filename = os.path.join(path, f"charts " + (",").join(CHARTIDS[i * 3:(i + 1) * 3]) + ".pdf")
 #         os.makedirs(os.path.dirname(filename), exist_ok=True)
 #         print(f"\t\tSaving plots to {filename}...")
 #         plt.savefig(filename)
@@ -202,7 +204,7 @@ def by_user_stats(parameter, chart_ids, csvs):
 #
 def global_stats(parameter, chart_ids, csvs):
     global plt, target_colors
-    fig = plt.figure(dpi=72, figsize=(8.27, 11.69))
+    fig = plt.figure(dpi=72, figsize=(6, 9))
     path = os.path.join(saved_data_path, "by_chart")
     print(f"Extracting {PARAMETERS_LIST[parameter]} from CSVs")
     parsed_group_1 = by_chart(csvs[GROUP_1_ANSWER], chart_ids, column_to_extract=parameter)
@@ -240,11 +242,11 @@ def global_stats(parameter, chart_ids, csvs):
         group_each=GROUP_EACH_STD
     )
     plt.tight_layout()
-    # filename = os.path.join(path, f"{parameter}.png")
-    # os.makedirs(os.path.dirname(filename), exist_ok=True)
-    # print(f"\t\tSaving plots to {filename}...")
-    # plt.savefig(filename)
-    # print("\t\tPlots saved successfully!")
+    filename = os.path.join(path, f"{parameter}.pdf")
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    print(f"\t\tSaving plots to {filename}...")
+    plt.savefig(filename)
+    print("\t\tPlots saved successfully!")
     plt.pause(0.1)
     plt.show(block=False)
     # plt.close(fig=fig)
@@ -295,7 +297,7 @@ def start_vs_picked(parameter, chart_ids, csvs):
             columns=1
         )
         plt.tight_layout()
-        # filename = os.path.join(path, f"chart " + (",").join(chart_ids[i * 3:(i + 1) * 3]) + ".png")
+        # filename = os.path.join(path, f"chart " + (",").join(chart_ids[i * 3:(i + 1) * 3]) + ".pdf")
         # os.makedirs(os.path.dirname(filename), exist_ok=True)
         # print(f"\t\tSaving plots to {filename}...")
         # plt.savefig(filename)
@@ -330,7 +332,7 @@ def plot_iqr(parameter, chart_ids, csvs):
     plt.tight_layout()
     plt.pause(0.1)
     plt.show(block=False)
-    # filename = os.path.join(path, f"{parameter}.png")
+    # filename = os.path.join(path, f"{parameter}.pdf")
     # os.makedirs(os.path.dirname(filename), exist_ok=True)
     # print(f"\t\tSaving plots to {filename}...")
     # plt.savefig(filename)
@@ -383,7 +385,7 @@ def plot_iqr(parameter, chart_ids, csvs):
 #         charts_to_plot=CHARTIDS[i * 3:(i + 1) * 3],
 #         sup_title="a*b* scatter (sRGB, D65)"
 #     )
-#     filename = os.path.join(path, f"charts " + (",").join(CHARTIDS[i * 3:(i + 1) * 3]) + ".png")
+#     filename = os.path.join(path, f"charts " + (",").join(CHARTIDS[i * 3:(i + 1) * 3]) + ".pdf")
 #     os.makedirs(os.path.dirname(filename), exist_ok=True)
 #     print(f"\t\tSaving plots to {filename}...")
 #     plt.savefig(filename)
@@ -416,7 +418,7 @@ def by_chart_compl(parameter, chart_ids, csvs):
         group_each=GROUP_EACH_PAIRS
     )
     plt.tight_layout()
-    # filename = os.path.join(path, f"{parameter}.png")
+    # filename = os.path.join(path, f"{parameter}.pdf")
     # os.makedirs(os.path.dirname(filename), exist_ok=True)
     # print(f"\t\tSaving plots to {filename}...")
     # plt.savefig(filename)
@@ -486,7 +488,7 @@ def scatter_plots(csvs, chart_ids, conversion_function=RGB2Lab.rgb2lab):
         plt.tight_layout(w_pad=10, h_pad=5)
         #plt.pause(0.1)
         #plt.show(block=False)
-        filename = os.path.join(path, f"charts " + (",").join(chart_ids[i:i+1]) + ".png")
+        filename = os.path.join(path, f"charts " + (",").join(chart_ids[i:i+1]) + ".pdf")
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         print(f"\t\tSaving plots to {filename}...")
         plt.savefig(filename)
@@ -534,7 +536,7 @@ def chart_hsl_compl(csvs, chart_ids):
     plt.tight_layout()
     plt.pause(0.1)
     plt.show(block=False)
-    # filename = os.path.join(path, "hsl.png")
+    # filename = os.path.join(path, "hsl.pdf")
     # os.makedirs(os.path.dirname(filename), exist_ok=True)
     # print(f"\t\tSaving plots to {filename}...")
     # plt.savefig(filename)
@@ -622,7 +624,7 @@ def compl_delta_e(csvs, chart_ids, conversion_function=RGB2Lab.rgb2lab):
     plt.tight_layout()
     plt.pause(0.1)
     plt.show(block=False)
-    # filename = os.path.join(path, f"{parameter}.png")
+    # filename = os.path.join(path, f"{parameter}.pdf")
     # os.makedirs(os.path.dirname(filename), exist_ok=True)
     # print(f"\t\tSaving plots to {filename}...")
     # plt.savefig(filename)
@@ -808,7 +810,7 @@ def show_charts(csvs, chart_ids):
     drawgrid.setColor([1, 1], "#ff0000", "#ffff00")
     i = 0
 
-    bgImg = Image.open(os.path.join(test_results_path, "whitenoise.png"))
+    bgImg = Image.open(os.path.join(test_results_path, "whitenoise.pdf"))
 
     for chart_id in chart_ids:
         group_1_mean_lab = np.mean(picked_lab_group_1[chart_id], axis=0)
@@ -829,7 +831,7 @@ def show_charts(csvs, chart_ids):
             drawgrid.setBgImage([i, 2], RGB2Lab.lab2rgb(group_1_mean_lab), bgImg, chart_id + ", " + LABEL_1)
         i += 1
     img.show()
-    img.save(os.path.join(path, f'{chart_ids}.png'))
+    img.save(os.path.join(path, f'{chart_ids}.pdf'))
 
 
 def default_function():

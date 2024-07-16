@@ -30,7 +30,7 @@ def GETCSVs(path, organize_by, min_rows=-1, verbose=False):
             if verbose:
                 print(f'SKIPPED "{basename(normpath(os.path.dirname(csv_path)))}", {row_count} rows')
             continue
-        user_details_file = os.path.dirname(csv_path) + "\\user_details.txt"
+        user_details_file = os.path.dirname(csv_path) + "/user_details.txt"
         organize_value = ""
         user_id = ""
         found_strings = 0
