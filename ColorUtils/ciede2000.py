@@ -1,7 +1,9 @@
 import math
+from scipy.spatial import distance
 
 def CIEDE2000(Lab_1, Lab_2):
     '''Calculates CIEDE2000 color distance between two CIE L*a*b* colors'''
+    return(distance.euclidean(Lab_1, Lab_2))
     C_25_7 = 6103515625 # 25**7
     
     L1, a1, b1 = Lab_1[0], Lab_1[1], Lab_1[2]

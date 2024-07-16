@@ -1,5 +1,10 @@
 import csv
-from ColorUtils.RGB2Lab import RGB2Lab
+import numbers
+from pprint import pprint
+
+import numpy as np
+
+from ColorUtils import RGB2Lab
 from ColorUtils.ciede2000 import CIEDE2000
 
 USER_ID = "user_nickname:"  # String in user_details.txt followed by user_id
@@ -10,7 +15,7 @@ USER_ID = "user_nickname:"  # String in user_details.txt followed by user_id
 #
 #   PARSE TESTS GROUPED BY CHART
 #
-def by_chart(CSVs, chart_ids, column_to_extract, verbose=False, ignore_na=True):
+def by_chart(CSVs, chart_ids, column_to_extract, verbose=False, ignore_na=True, func=None):
     rows_number = len(chart_ids)
 
     extracted_results = {}  # Lists of all the extracted results from the CSVs, one list for each chart
@@ -30,10 +35,13 @@ def by_chart(CSVs, chart_ids, column_to_extract, verbose=False, ignore_na=True):
             line_count = 1
             for row in csv_reader:
                 if column_to_extract == "delta_e":
-                    val = CIEDE2000(RGB2Lab.rgb2lab(RGB2Lab, row["actual_color"]),
-                                    RGB2Lab.rgb2lab(RGB2Lab, row["picked_color"]))
+                    val = CIEDE2000(RGB2Lab.rgb2lab(row["actual_color"]),
+                                    RGB2Lab.rgb2lab(row["picked_color"]))
                 else:
-                    val = row[column_to_extract]
+                    if func is None:
+                        val = row[column_to_extract]
+                    else:
+                        val = func(row[column_to_extract])
                 actual_csv_rows[row["chart_id"]] = val
                 line_count += 1
             if verbose:
@@ -49,7 +57,14 @@ def by_chart(CSVs, chart_ids, column_to_extract, verbose=False, ignore_na=True):
 
         for chart_id in chart_ids:
             if chart_id in actual_csv_rows:
-                extracted_results[chart_id].append(float(actual_csv_rows[chart_id]))
+                val = actual_csv_rows[chart_id]
+                if isinstance(val, str):
+                    try:
+                        tmp_val = float(val)
+                        val = tmp_val
+                    except ValueError:
+                        val = actual_csv_rows[chart_id]
+                extracted_results[chart_id].append(val)
             else:
                 extracted_results[chart_id].append("n/a")
 
@@ -84,8 +99,8 @@ def by_user(CSVs, chart_ids, column_to_extract, verbose=False, ignore_na=True):
             line_count = 1
             for row in csv_reader:
                 if column_to_extract == "delta_e":
-                    val = CIEDE2000(RGB2Lab.rgb2lab(RGB2Lab, row["actual_color"]),
-                                    RGB2Lab.rgb2lab(RGB2Lab, row["picked_color"]))
+                    val = CIEDE2000(RGB2Lab.rgb2lab(row["actual_color"]),
+                                    RGB2Lab.rgb2lab(row["picked_color"]))
                 else:
                     val = row[column_to_extract]
                 actual_csv_rows[row["chart_id"]] = val
@@ -104,7 +119,10 @@ def by_user(CSVs, chart_ids, column_to_extract, verbose=False, ignore_na=True):
 
         for chart_id in chart_ids:
             if chart_id in actual_csv_rows:
-                extracted_results[user_id].append(float(actual_csv_rows[chart_id]))
+                try:
+                    extracted_results[user_id].append(float(actual_csv_rows[chart_id]))
+                except ValueError:
+                    extracted_results[user_id].append(actual_csv_rows[chart_id])
             else:
                 extracted_results[user_id].append("n/a")
 
@@ -116,7 +134,7 @@ def by_user(CSVs, chart_ids, column_to_extract, verbose=False, ignore_na=True):
 #
 #   PARSE TESTS a AND b VALUES GROUPED BY CHART
 #
-def get_picked_lab(CSVs, chart_ids, verbose=False, ignore_na=True):
+def get_derived(CSVs, chart_ids, column_to_extract, verbose=False, ignore_na=True, func=RGB2Lab.rgb2lab):
     rows_number = len(chart_ids)
 
     extracted_results = {}  # Lists of all the extracted results from the CSVs, one list for each chart
@@ -135,7 +153,7 @@ def get_picked_lab(CSVs, chart_ids, verbose=False, ignore_na=True):
             csv_reader = csv.DictReader(csv_file)
             line_count = 1
             for row in csv_reader:
-                actual_csv_rows[row["chart_id"]] = RGB2Lab.rgb2lab(RGB2Lab, row["picked_color"])
+                actual_csv_rows[row["chart_id"]] = func(row[column_to_extract])
                 line_count += 1
             if verbose:
                 print(f'User "{user_id}": processed {line_count - 1}/{rows_number} lines of file {csv_path}.')

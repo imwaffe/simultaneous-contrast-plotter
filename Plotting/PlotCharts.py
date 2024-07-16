@@ -33,7 +33,7 @@ def sort_dictionary(dictionary, column_keys, truncate=0, sort=True):
     return sorted_ticks, sorted_data
 
 
-def draw_plot(data, ticks, title, grid_spec, color):
+def draw_plot(data, ticks, title, grid_spec, color="#2C7BB6"):
     ax = plotter.simple_plot(
         ax=plt.subplot(grid_spec),
         data=data,
@@ -43,7 +43,7 @@ def draw_plot(data, ticks, title, grid_spec, color):
         color=color
     )
     ax.axhline(y=np.quantile(data, 0.75), color=color, ls='dotted',
-               label=f'3rd quartile = {np.quantile(data, 0.75)}')
+               label=f'3rd quartile = {np.round(np.quantile(data, 0.75),2)}')
     ax.axhline(y=np.median(data), color=color, label=f'median = {np.median(data)}')
     ax.axhline(y=np.quantile(data, 0.25), color=color, ls='--',
                label=f'1st quartile = {np.quantile(data, 0.25)}')
@@ -77,7 +77,7 @@ def draw_merged_plot(data, ticks, ticks_1, ticks_2, title, grid_spec, color_1, c
 
 def plots_group(dict_1, dict_2, column_keys, use_columns, fig, label_1=None, label_2=None, sup_title=None, dpi=72,
                 truncate=0,
-                color_1="#2C7BB6", color_2="#ebba34", show_grid=True, sort=True, columns=2):
+                color_1="#2C7BB6", color_2="#ebba34", show_grid=True, sort=True, columns=2, max_y_user=0):
     assert len(use_columns) == 3, "chart_ids array length should be 3"
 
     gs = GridSpec(3, columns, figure=fig)
@@ -137,7 +137,10 @@ def plots_group(dict_1, dict_2, column_keys, use_columns, fig, label_1=None, lab
         raise Exception("Must have 1 or 2 columns")
 
     for ax in axes:
-        ax.set_ylim([0, max_y + 5])
+        if max_y_user == 0:
+            ax.set_ylim([0, max_y + 5])
+        else:
+            ax.set_ylim([0, max_y_user])
         for label in ax.get_xticklabels():
             label.set_fontsize(6)
         if show_grid:
